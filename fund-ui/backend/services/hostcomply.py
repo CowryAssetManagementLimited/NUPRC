@@ -3,10 +3,14 @@ from fastapi import HTTPException
 from config import BASE_URL, FM_HOST_COMPLY_CODE, HEADERS
 
 def proxy_request(method: str, path: str, params=None, body=None):
-    """Generic request proxy to HostComply API"""
     try:
         params = params or {}
-        params["fmHostComplyCode"] = FM_HOST_COMPLY_CODE
+        body = body or {}
+
+        if method.upper() == "GET":
+            params["fmHostComplyCode"] = FM_HOST_COMPLY_CODE
+        else:  # POST/PUT etc.
+            body["fmHostComplyCode"] = FM_HOST_COMPLY_CODE
 
         resp = requests.request(
             method=method,

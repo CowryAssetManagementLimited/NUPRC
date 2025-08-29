@@ -38,5 +38,12 @@ def list_transactions(
     return proxy_request("GET", "/transactions", params=params)
 
 @router.post("/")
-def create_transaction(body: TransactionCreate):
-    return proxy_request("POST", "/transactions", body=body.dict())
+def create_transaction(body: dict):
+    mapped_body = {
+        "TransactionDate": body.get("transactionDate"),
+        "DailyYield": body.get("dailyYield"),
+        "InvestmentTypeCode": body.get("investmentTypeCode"),
+        "InvestmentPortfolioId": body.get("portfolioId"),
+        "fmHostComplyCode": body.get("fmHostComplyCode")  # optional, proxy adds it if missing
+    }
+    return proxy_request("POST", "/transactions", body=mapped_body)
